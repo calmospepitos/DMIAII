@@ -1,4 +1,6 @@
 import math
+import sys
+from time import perf_counter
 
 ## CALCULATRICE
 ## Question 1A: 4x^2 + 17x - 1 = 0
@@ -119,4 +121,96 @@ l1[:] = []  # On vide la liste référencée par l1 et l2
 
 print(f"Question 2.2C: {l2}")  # Résultat : [] (l2 est affecté)
 
-## TUPLES
+## DICTIONNAIRES
+## Question 1D: Créez un dictionnaire qui a comme clé chaque élément de la liste suivante et comme valeur, son index (position dans la liste): -[74, ‘toto’, 87, ‘allo’, -6, 999]
+d = {}
+d = {value: index for index, value in enumerate([74, 'toto', 87, 'allo', -6, 999])}
+## Autre méthode
+# l = [74, 'toto', 87, 'allo', -6, 999]
+# d = {l[index]index for index in range(len(l))}
+print(f"Question 1D: {d}")
+
+## Question 2D: Initialisez un dictionnaire à partir d'une liste de taille quelconque contenant des tuples de taille 2.
+l = [(1,2),(3,4),(5,6)]
+d = dict(l) # Conversion de la liste en dictionnaire
+print(f"Question 2D: {d}")
+
+## STRUCTURES DE CONTRÔLE
+## Question 1E: Trouvez le nombre de paires de lapins en utilisant Fibonacci.
+def fibonacci_lapins(n):
+    if n == 0 or n == 1:
+        return 1
+    return fibonacci_lapins(n-1) + fibonacci_lapins(n-2)
+
+## Question 2E: Trouvez combien il y a de paires de lapins en 18 mois à l'aide d’une boucle.
+def itteratif_lapins(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        a, b = 1, 1
+        for _ in range(n-1):
+            a, b = b, a + b
+        return b
+
+mois = 18
+print(f"Question 2E: {itteratif_lapins(mois)}")
+
+## FONCTIONS
+## Question 1F: Créez une fonction fib() récursive.
+## Voir la fonction fibonacci_lapins(n) de la question 1E, elle est déjà récursive.
+def fibiter(n): # Itérative
+    fn = fn1 = fn2 = 1
+    while n >= 2:
+        fn = fn1 + fn2
+        fn1, fn2 = fn, fn1
+        n -= 1
+    return fn
+
+def fibrec(n): # Récursive
+    if n == 0 or n == 1:
+        return 1
+    return fibrec(n-1) + fibrec(n-2)
+
+def fibdyn(n): # Dynamique
+    def _fibdyn(n, sol_part):
+        if n not in sol_part:
+            sol_part[n] = _fibdyn(n-1, sol_part) + _fibdyn(n-2, sol_part)
+        return sol_part[n]
+    return _fibdyn(n, {0:1, 1:1})
+
+def afficher(f, n):
+    t = perf_counter()
+    fn = f(n)
+    t = perf_counter() - t
+
+    print(f"Question 1F: {f.__name__}{{n}} = {fn} en {t:.6f} secondes")
+
+def main():
+    n = 18
+
+    afficher(fibiter, n)
+    afficher(fibrec, n)
+    afficher(fibdyn, n)
+
+    return 0
+
+if __name__ == "__main__":
+    main()
+
+## Question 2F: Avec le fichier LesTroisMousquetaires.txt, vous allez:
+## Compter le nombre de lignes, compter le nombre de caractères, compter le nombre de mots, compter le nombre de séquences de caractères s, où s est fournie en argument.
+def analyse_texte(file_path, s):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lignes = file.read()
+    
+    nb_chars = len(lignes)
+    nb_lignes = len(lignes.splitlines())
+    nb_mots = len(lignes.split())
+    nb_sequence = lignes.count(s)
+
+    return nb_lignes, nb_chars, nb_mots, nb_sequence
+
+file_path = "EXERCICES/FILES/LesTroisMousquetairesUTF8.txt"
+num_chars, num_lines, num_words, num_sequence = analyse_texte(file_path, "s")
+
+print(f"Question 2F: {num_chars} caractères, {num_lines} lignes, {num_words} mots, {num_sequence} sequences")
